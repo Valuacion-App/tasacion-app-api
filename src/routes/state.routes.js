@@ -14,7 +14,7 @@ const router = Router()
 router.get('/', getStates)
 router.post('/', validateSchema(registerState), createState)
 router.get('/:id', getState)
-router.put('/:id', updateState)
+router.put('/:id', validateSchema(registerState), updateState)
 router.delete('/:id', deleteState)
 
 export default router
