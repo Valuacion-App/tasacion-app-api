@@ -5,20 +5,24 @@ import cors from 'cors'
 import { connectDB } from './config/mongo.js'
 
 import routeWelcome from './routes/welcome.routes.js'
+import routeState from './routes/state.routes.js'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
+const apiRoute = '/api/v1'
 
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cors())
 app.disable('x-powered-by')
 
-app.use('/api', routeWelcome)
+app.use(apiRoute, routeWelcome)
+app.use(apiRoute + '/states', routeState)
 
 connectDB()
+
 app.listen(PORT, () => {
   console.log(`Server listening on port http://localhost:${PORT}/api`)
 })
