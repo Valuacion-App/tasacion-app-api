@@ -1,21 +1,16 @@
 import jwt from 'jsonwebtoken'
-import config from '../config'
-import User from '../models/User'
 
 export const verifyToken = async (req, res, next) => {
   try {
-    const token = req.headers['x-access-token']
+    const { token } = req.cookies
+    if (!token) return res.status(401).json({ message: 'No se envio ningun token' })
 
-    if (!token) return res.status(403).json({ message: 'No token provides' })
-
-    const decoded = jwt.verify(token, config.SECRET)
-
-    const user = await User.findById(decoded.id, { password: 0 })
-    console.log(decoded)
-    if (!user) return res.status(404).json({ message: 'no user found' })
-
-    next()
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+      if (err) return res.status(403).json({ message: 'token no valido' })
+      req.user = user
+      next()
+    })
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' })
+    return res.status(401).json({ message: 'sin autorizacion' })
   }
 }

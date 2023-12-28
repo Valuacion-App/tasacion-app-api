@@ -8,13 +8,14 @@ import {
 } from '../controllers/state.controller.js'
 import { validateSchema } from '../middlewares/validator.middleware.js'
 import { registerState } from '../schemas/state.schema.js'
+import { verifyToken } from '../middlewares/authenticationJwT.js'
 
 const router = Router()
 
-router.get('/', getStates)
-router.post('/', validateSchema(registerState), createState)
+router.get('/', verifyToken, getStates)
+router.post('/', verifyToken, validateSchema(registerState), createState)
 router.get('/:id', getState)
-router.put('/:id', validateSchema(registerState.partial()), updateState)
+router.put('/:id', verifyToken, validateSchema(registerState.partial()), updateState)
 router.delete('/:id', deleteState)
 
 export default router
