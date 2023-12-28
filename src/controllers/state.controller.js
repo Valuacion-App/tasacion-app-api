@@ -22,7 +22,7 @@ export const createState = async (req, res) => {
     res.status(201).json({
       message: 'Estado creado correctamente',
       data: {
-        id: stateSaved.id,
+        id: stateSaved._id,
         name: stateSaved.name,
         k2: stateSaved.k2
       }
