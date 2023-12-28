@@ -6,6 +6,7 @@ import { connectDB } from './config/mongo.js'
 
 import routeWelcome from './routes/welcome.routes.js'
 import routeState from './routes/state.routes.js'
+import routeUbications from './routes/ubication.routes.js'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.disable('x-powered-by')
 
 app.use(apiRoute, routeWelcome)
 app.use(apiRoute + '/states', routeState)
+app.use(apiRoute + '/ubications', routeUbications)
 
 connectDB()
 
