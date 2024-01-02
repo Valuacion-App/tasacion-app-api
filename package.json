@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "test": "npx standard"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "set NODE_OPTIONS=--experimental-vm-modules && jest",
+    "lint": "npx standard"
   },
   "keywords": [],
   "author": "",
@@ -23,8 +24,10 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "3.0.2",
-    "standard": "17.1.0"
+    "standard": "17.1.0",
+    "supertest": "^6.3.3"
   },
   "eslintConfig": {
     "extends": "standard"

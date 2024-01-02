@@ -7,11 +7,12 @@ import { connectDB } from './config/mongo.js'
 import routeWelcome from './routes/welcome.routes.js'
 import routeState from './routes/state.routes.js'
 import routeUbications from './routes/ubication.routes.js'
+import routeSubgroups from './routes/subgroup.routes.js'
 
 dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 3000
+
 const apiRoute = '/api/v1'
 
 app.use(morgan('dev'))
@@ -22,9 +23,8 @@ app.disable('x-powered-by')
 app.use(apiRoute, routeWelcome)
 app.use(apiRoute + '/states', routeState)
 app.use(apiRoute + '/ubications', routeUbications)
+app.use(apiRoute + '/sub-groups', routeSubgroups)
 
 connectDB()
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port http://localhost:${PORT}/api`)
-})
+export default app
