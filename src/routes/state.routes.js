@@ -14,8 +14,8 @@ const router = Router()
 
 router.get('/', verifyToken, getStates)
 router.post('/', verifyToken, validateSchema(registerState), createState)
-router.get('/:id', getState)
+router.get('/:id', verifyToken, getState)
 router.put('/:id', verifyToken, validateSchema(registerState.partial()), updateState)
-router.delete('/:id', deleteState)
+router.delete('/:id', verifyToken, deleteState)
 
 export default router
