@@ -42,7 +42,7 @@ export const getUbication = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'La ubicación no existe'
+        message: 'Ubicación no encontado'
       })
     }
     res.status(200).json(ubication)
@@ -67,7 +67,7 @@ export const updateUbication = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'La ubicación no existe'
+        message: 'Ubicación no encontado'
       })
     }
     res.status(200).json({
@@ -88,7 +88,7 @@ export const deleteUbication = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'La ubicación no existe'
+        message: 'Ubicación no encontado'
       })
     }
     res.status(200).json({

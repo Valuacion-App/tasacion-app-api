@@ -41,7 +41,7 @@ export const getState = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'El estado no existe'
+        message: 'Estado no encontrado'
       })
     }
     res.status(200).json(state)
@@ -62,7 +62,7 @@ export const updateState = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'El estado no existe'
+        message: 'Estado no encontrado'
       })
     }
     res.status(200).json({
@@ -83,7 +83,7 @@ export const deleteState = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'El estado no existe'
+        message: 'Estado no encontrado'
       })
     }
     return res.status(200).json({ message: 'Estado eliminado correctamente' })

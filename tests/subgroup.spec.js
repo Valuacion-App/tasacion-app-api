@@ -38,7 +38,7 @@ describe('Test for CRUD from SubGroup', () => {
       await SubGroup.deleteMany({ name: 'Test SubGroup' })
     })
 
-    test('should respond with a 200 status code and json format', async () => {
+    test('should respond with a 201 status code and json format', async () => {
       const response = await request(app).post('/api/v1/sub-groups').send(newSubGroup)
 
       expect(response.status).toBe(201)
@@ -66,7 +66,7 @@ describe('Test for CRUD from SubGroup', () => {
     let idNotFound
     beforeEach(async () => {
       subgroup = await SubGroup.create({ name: 'test subgroup' })
-      response = await request(app).get(`/api/v1/sub-groups/${subgroup._id}`)
+      response = await request(app).get(`/api/v1/sub-groups/${subgroup._id}`).send()
       idNotFound = new mongoose.Types.ObjectId()
     })
     afterEach(async () => {
@@ -84,7 +84,7 @@ describe('Test for CRUD from SubGroup', () => {
     })
 
     test('should respond with a 404 not found response and a message', async () => {
-      const responseNotFound = await request(app).get(`/api/v1/sub-groups/${idNotFound}`)
+      const responseNotFound = await request(app).get(`/api/v1/sub-groups/${idNotFound}`).send()
 
       expect(responseNotFound.status).toBe(404)
       expect(responseNotFound.body.error).toBeDefined()
