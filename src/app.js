@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import express from 'express'
-// import morgan from 'morgan'
+import morgan from 'morgan'
 import cors from 'cors'
 import { connectDB } from './config/mongo.js'
 import routeWelcome from './routes/welcome.routes.js'
@@ -17,7 +17,7 @@ const app = express()
 
 const apiRoute = '/api/v1'
 
-// app.use(morgan('dev'))
+app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
