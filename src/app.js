@@ -9,6 +9,7 @@ import routeUbications from './routes/ubication.routes.js'
 import cookieParser from 'cookie-parser'
 import routeSubgroups from './routes/subgroup.routes.js'
 import routeArticles from '../src/routes/article.routes.js'
+import userRoutes from './routes/user.routes.js'
 
 import authRoutes from './routes/authentication.routes.js'
 dotenv.config()
@@ -29,6 +30,7 @@ app.use(apiRoute + '/ubications', routeUbications)
 app.use(apiRoute + '/auth', authRoutes)
 app.use(apiRoute + '/sub-groups', routeSubgroups)
 app.use(apiRoute + '/articles', routeArticles)
+app.use(apiRoute + '/users', userRoutes)
 
 connectDB()
 

@@ -9,8 +9,7 @@ export const signUp = async (req, res) => {
     input.password = await encryptPassword(input.password)
     const newUser = new User(input)
     const saveUser = await newUser.save()
-    const token = await createAccessToken({ id: saveUser._id })
-
+    const token = await createAccessToken({ id: saveUser._id, roles: saveUser.roles })
     res.cookie('token', token)
     res.status(201).json({
       id: saveUser._id,
@@ -31,7 +30,7 @@ export const signIn = async (req, res) => {
 
     if (!matchPassword) return res.status(401).json({ token: null, message: 'contraseña invalida' })
 
-    const token = await createAccessToken({ id: userFound._id })
+    const token = await createAccessToken({ id: userFound._id, roles: userFound.roles })
 
     res.cookie('token', token)
     res.status(201).json({
@@ -49,11 +48,6 @@ export const logOut = (req, res) => {
     expires: new Date(0)
   })
   return res.sendStatus(200)
-}
-export const deleteUserById = async (req, res) => {
-  const { userId } = req.params
-  await User.findByIdAndDelete(userId)
-  res.status(204).json()
 }
 
 export const getAllUsers = async (req, res) => {
