@@ -10,7 +10,5 @@ router.post('/signin', validateSchema(loginSchema), authController.signIn)
 
 router.post('/logout', authController.logOut)
 
-router.delete('/:userId', authController.deleteUserById)
-
-router.get('/AllUsers', authController.getAllUsers)
+router.get('/allUsers', authController.getAllUsers)
 export default router
