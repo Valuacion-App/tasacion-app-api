@@ -24,11 +24,11 @@ export const signIn = async (req, res) => {
   try {
     const { email, password } = req.body
     const userFound = await User.findOne({ email })
-    if (!userFound) return res.status(400).json({ message: 'Usuario no encontrado' })
+    if (!userFound) return res.status(400).json({ message: 'Credenciales incorrectas' })
 
     const matchPassword = await comparePassword(password, userFound.password)
 
-    if (!matchPassword) return res.status(401).json({ token: null, message: 'Credenciales incorrectas' })
+    if (!matchPassword) return res.status(400).json({ message: 'Credenciales incorrectas' })
 
     const token = await createAccessToken({ id: userFound._id, roles: userFound.roles })
 
