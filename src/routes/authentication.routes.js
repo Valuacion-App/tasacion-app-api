@@ -10,5 +10,5 @@ router.post('/signin', validateSchema(loginSchema), authController.signIn)
 
 router.post('/logout', authController.logOut)
 
-router.get('/AllUsers', authController.getAllUsers)
+router.get('/allUsers', authController.getAllUsers)
 export default router

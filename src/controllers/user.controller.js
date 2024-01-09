@@ -17,11 +17,11 @@ export const updateUser = async (req, res) => {
       return handleHttpErrorCustome({
         res,
         code: 404,
-        message: 'El usuario no existe'
+        message: 'Usuario no encontrado'
       })
     }
     res.status(200).json({
-      message: 'usuario actualizado correctamente',
+      message: 'Usuario actualizado correctamente',
       data: userUpdated
     })
   } catch (error) {
