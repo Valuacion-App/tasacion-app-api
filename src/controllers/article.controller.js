@@ -105,7 +105,7 @@ export const deleteAllArticles = async (req, res) => {
   try {
     const result = await Article.deleteMany({})
     res.status(200).json({
-      message: 'Todos los tipos de articulos se eleminaron correctamente',
+      message: 'Todos los tipos de artículos se eliminaron correctamente',
       count: result.deletedCount
     })
   } catch (error) {
