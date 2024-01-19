@@ -1,8 +1,12 @@
+import csv from 'csv-parser'
 import Ubication from '../models/mongo/ubication.model.js'
 import {
   handleHttpError,
   handleHttpErrorCustome
 } from '../libs/handleHttpMessage/handleHttpError.js'
+import { dataMapperUbication } from '../libs/csv/dataMapper.js'
+import { cleanFile } from '../libs/csv/cleanFile.js'
+import { validateFile } from '../libs/csv/validateFile.js'
 
 export const getUbications = async (req, res) => {
   try {
@@ -93,6 +97,61 @@ export const deleteUbication = async (req, res) => {
     }
     res.status(200).json({
       message: 'Ubicación eliminado correctamente'
+    })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
+export const deleteAllUbications = async (req, res) => {
+  try {
+    const result = await Ubication.deleteMany({})
+    res.status(200).json({
+      message: 'Todas las ubicaciones se eliminaron correctamente',
+      count: result.deletedCount
+    })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
+export const uplopadDataCsv = async (req, res) => {
+  try {
+    const csvValidationResult = validateFile(req, 'csv')
+    if (csvValidationResult) {
+      return res
+        .status(csvValidationResult.status)
+        .json({ error: csvValidationResult.message })
+    }
+
+    const csvData = cleanFile(req.file.buffer.toString('utf-8'))
+    const parsedData = []
+    let dataSuccess = 0
+    let dataRejected = 0
+
+    await new Promise((resolve, reject) => {
+      const stream = csv({ separator: ',' })
+        .on('data', (row) => {
+          const newUbication = dataMapperUbication(row)
+          if (newUbication) {
+            parsedData.push(newUbication)
+            dataSuccess += 1
+          } else {
+            dataRejected += 1
+          }
+        })
+        .on('end', () => resolve())
+        .on('error', (error) => reject(error))
+
+      stream.write(csvData)
+      stream.end()
+    })
+
+    await Ubication.insertMany(parsedData)
+    res.status(200).json({
+      success: dataSuccess > 0,
+      dataSuccess,
+      dataRejected
     })
   } catch (error) {
     handleHttpError({ res, error: error.message })
