@@ -115,7 +115,7 @@ export const deleteAllUbications = async (req, res) => {
   }
 }
 
-export const uplopadDataCsv = async (req, res) => {
+export const uploadDataCsv = async (req, res) => {
   try {
     const csvValidationResult = validateFile(req, 'csv')
     if (csvValidationResult) {

@@ -6,7 +6,7 @@ import {
   updateUbication,
   deleteUbication,
   deleteAllUbications,
-  uplopadDataCsv
+  uploadDataCsv
 } from '../controllers/ubication.controller.js'
 import { upload } from '../middlewares/multer.js'
 import { validateSchema } from '../middlewares/validator.middleware.js'
@@ -16,7 +16,7 @@ const router = Router()
 
 router.get('/', getUbications)
 router.post('/', validateSchema(registerUbication), createUbication)
-router.post('/import-data', upload.single('csvFile'), uplopadDataCsv)
+router.post('/import-data', upload.single('csvFile'), uploadDataCsv)
 router.get('/:id', getUbication)
 router.put(
   '/:id',

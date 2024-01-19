@@ -1,8 +1,12 @@
+import csv from 'csv-parser'
 import State from '../models/mongo/state.model.js'
 import {
   handleHttpError,
   handleHttpErrorCustome
 } from '../libs/handleHttpMessage/handleHttpError.js'
+import { validateFile } from '../libs/csv/validateFile.js'
+import { cleanFile } from '../libs/csv/cleanFile.js'
+import { dataMapperState } from '../libs/csv/dataMapper.js'
 
 export const getStates = async (req, res) => {
   try {
@@ -87,6 +91,61 @@ export const deleteState = async (req, res) => {
       })
     }
     return res.status(200).json({ message: 'Estado eliminado correctamente' })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
+export const deleteAllStates = async (req, res) => {
+  try {
+    const result = await State.deleteMany({})
+    res.status(200).json({
+      message: 'Todos los estados se eliminaron correctamente',
+      count: result.deletedCount
+    })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
+export const uploadDataCsv = async (req, res) => {
+  try {
+    const csvValidationResult = validateFile(req, 'csv')
+    if (csvValidationResult) {
+      return res
+        .status(csvValidationResult.status)
+        .json({ error: csvValidationResult.message })
+    }
+
+    const csvData = cleanFile(req.file.buffer.toString('utf-8'))
+    const parsedData = []
+    let dataSuccess = 0
+    let dataRejected = 0
+
+    await new Promise((resolve, reject) => {
+      const stream = csv({ separator: ',' })
+        .on('data', (row) => {
+          const newState = dataMapperState(row)
+          if (newState) {
+            parsedData.push(newState)
+            dataSuccess += 1
+          } else {
+            dataRejected += 1
+          }
+        })
+        .on('end', () => resolve())
+        .on('error', (error) => reject(error))
+
+      stream.write(csvData)
+      stream.end()
+    })
+
+    await State.insertMany(parsedData)
+    res.status(200).json({
+      success: dataSuccess > 0,
+      dataSuccess,
+      dataRejected
+    })
   } catch (error) {
     handleHttpError({ res, error: error.message })
   }
