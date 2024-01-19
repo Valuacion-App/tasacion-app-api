@@ -6,7 +6,6 @@ import {
   updateUbication,
   deleteUbication,
   deleteAllUbications,
-  // importDataCvs,
   uplopadDataCsv
 } from '../controllers/ubication.controller.js'
 import { upload } from '../middlewares/multer.js'
