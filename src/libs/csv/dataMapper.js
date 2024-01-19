@@ -25,3 +25,14 @@ export const dataMapperArticle = (data) => {
   }
   return newArticle
 }
+
+export const dataMapperSubGroup = (data) => {
+  const nameSubGroup = data.Nombre
+
+  if (!nameSubGroup) return false
+
+  const newSubGroup = {
+    name: nameSubGroup
+  }
+  return newSubGroup
+}
