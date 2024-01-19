@@ -36,3 +36,16 @@ export const dataMapperSubGroup = (data) => {
   }
   return newSubGroup
 }
+
+export const dataMapperState = (data) => {
+  const nameState = data.EstadoSimple
+  const valueState = data.K2
+
+  if (!nameState || !valueState) return false
+
+  const newState = {
+    name: nameState,
+    k2: Number(valueState)
+  }
+  return newState
+}
