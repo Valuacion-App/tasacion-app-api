@@ -3,14 +3,19 @@ import { handleHttpErrorCustome } from '../libs/handleHttpMessage/handleHttpErro
 
 export const verifyToken = async (req, res, next) => {
   try {
-    const { token } = req.cookies
+    const token = req.headers.authorization
     if (!token) return res.status(401).json({ message: 'No se envio ningun token' })
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-      if (err) return res.status(403).json({ message: 'Token no valido' })
-      req.user = user
-      next()
-    })
+    if (token !== undefined && token.startsWith('Bearer ')) {
+      const bearerToken = token.slice(7)
+      jwt.verify(bearerToken, process.env.TOKEN_SECRET, (err, user) => {
+        if (err) return res.status(401).json({ message: 'Token no valido' })
+        req.user = user
+        next()
+      })
+    } else {
+      return res.status(401).json({ message: 'Acceso Denegado' })
+    }
   } catch (error) {
     return res.status(401).json({ message: 'Sin autorizacion' })
   }
@@ -25,7 +30,7 @@ export const isAdmin = async (req, res, next) => {
         return
       }
     }
-    res.status(403).json({ message: 'Acceso denegado' })
+    res.status(401).json({ message: 'Acceso denegado' })
   } catch (error) {
     return res.status(401).json({ message: 'Sin autorizacion' })
   }
