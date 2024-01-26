@@ -4,7 +4,8 @@ import {
   createAppraisalArticle,
   getAppraisalArticle,
   updateAppraisalArticle,
-  deleteAppraisalArticle
+  deleteAppraisalArticle,
+  getFilterAppraisalArticles
 } from '../controllers/appraisalArticle.controller.js'
 import { validateSchema } from '../middlewares/validator.middleware.js'
 import { registerAppraisalArticle } from '../schemas/appraisalArticle.schema.js'
@@ -12,6 +13,7 @@ import { registerAppraisalArticle } from '../schemas/appraisalArticle.schema.js'
 const router = Router()
 
 router.get('/', getAppraisalArticles)
+router.get('/search', getFilterAppraisalArticles)
 router.post(
   '/',
   validateSchema(registerAppraisalArticle),

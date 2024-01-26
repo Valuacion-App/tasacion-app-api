@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import {
   handleHttpError,
   handleHttpErrorCustome
@@ -104,6 +105,27 @@ export const deleteAppraisalArticle = async (req, res) => {
     res.status(200).json({
       message: 'Articulo de tasacion eliminado correctamente'
     })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
+export const getFilterAppraisalArticles = async (req, res) => {
+  try {
+    const { ubicationId, articleId, subgroupId, stateId } = req.query
+
+    const filters = {}
+    if (ubicationId) { filters.ubication = new mongoose.Types.ObjectId(ubicationId) }
+    if (articleId) filters.article = new mongoose.Types.ObjectId(articleId)
+    if (subgroupId) filters.subGroup = new mongoose.Types.ObjectId(subgroupId)
+    if (stateId) filters.state = new mongoose.Types.ObjectId(stateId)
+
+    const results = await AppraisalArticle.find(filters)
+      .populate('state', 'name')
+      .populate('ubication', 'name')
+      .populate('article', 'name')
+      .populate('subGroup', 'name')
+    res.status(200).json(results)
   } catch (error) {
     handleHttpError({ res, error: error.message })
   }
