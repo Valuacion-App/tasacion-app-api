@@ -15,12 +15,12 @@ import { upload } from '../middlewares/multer.js'
 
 const router = Router()
 
-router.get('/', verifyToken, isAdmin, getStates)
+router.get('/', verifyToken, getStates)
 router.post('/', verifyToken, validateSchema(registerState), createState)
 router.post('/import-data', upload.single('csvFile'), uploadDataCsv)
 router.get('/:id', verifyToken, getState)
-router.put('/:id', verifyToken, validateSchema(registerState.partial()), updateState)
+router.put('/:id', verifyToken, isAdmin, validateSchema(registerState.partial()), updateState)
 router.delete('/delete-all', deleteAllStates)
-router.delete('/:id', verifyToken, deleteState)
+router.delete('/:id', verifyToken, isAdmin, deleteState)
 
 export default router

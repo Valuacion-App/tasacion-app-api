@@ -11,15 +11,15 @@ import {
 import { registerSubGroup } from '../schemas/subgroup.schema.js'
 import { validateSchema } from '../middlewares/validator.middleware.js'
 import { upload } from '../middlewares/multer.js'
-
+import { verifyToken } from '../middlewares/authenticationJwT.js'
 const router = Router()
 
-router.get('/', getSubGroups)
-router.post('/', validateSchema(registerSubGroup), createSubGroup)
+router.get('/', verifyToken, getSubGroups)
+router.post('/', verifyToken, validateSchema(registerSubGroup), createSubGroup)
 router.post('/import-data', upload.single('csvFile'), uploadDataCsv)
 router.get('/:id', getSubGroup)
-router.put('/:id', validateSchema(registerSubGroup.partial()), updateSubGroup)
+router.put('/:id', verifyToken, validateSchema(registerSubGroup.partial()), updateSubGroup)
 router.delete('/delete-all', deleteAllSubGroups)
-router.delete('/:id', deleteSubGroup)
+router.delete('/:id', verifyToken, deleteSubGroup)
 
 export default router

@@ -10,12 +10,7 @@ export const signUp = async (req, res) => {
     const newUser = new User(input)
     const saveUser = await newUser.save()
     const token = await createAccessToken({ id: saveUser._id, roles: saveUser.roles })
-    res.cookie('token', token)
-    res.status(201).json({
-      id: saveUser._id,
-      username: saveUser.username,
-      email: saveUser.email
-    })
+    res.status(201).json(token)
   } catch (error) {
     handleHttpError({ res, error: error.message })
   }
@@ -32,12 +27,7 @@ export const signIn = async (req, res) => {
 
     const token = await createAccessToken({ id: userFound._id, roles: userFound.roles })
 
-    res.cookie('token', token)
-    res.status(201).json({
-      id: userFound._id,
-      username: userFound.username,
-      email: userFound.email
-    })
+    res.status(201).json(token)
   } catch (error) {
     handleHttpError({ res, error: error.message })
   }
