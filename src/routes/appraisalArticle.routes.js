@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import {
-  getAppraisalArticles,
   createAppraisalArticle,
   getAppraisalArticle,
   updateAppraisalArticle,
@@ -15,7 +14,6 @@ import { upload } from '../middlewares/multer.js'
 
 const router = Router()
 
-router.get('/', getAppraisalArticles)
 router.get('/search', getFilterAppraisalArticles)
 router.get('/:id', getAppraisalArticle)
 

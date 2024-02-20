@@ -10,7 +10,7 @@ import { dataMapperSubGroup } from '../libs/csv/dataMapper.js'
 
 export const getSubGroups = async (req, res) => {
   try {
-    const allSubGroups = await SubGroup.find()
+    const allSubGroups = await SubGroup.find().sort({ name: 'asc' })
     res.status(200).json(allSubGroups)
   } catch (error) {
     handleHttpError({ res, error: error.message })

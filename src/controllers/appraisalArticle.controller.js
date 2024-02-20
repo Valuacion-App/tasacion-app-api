@@ -13,23 +13,6 @@ import { dataMapperAppraisalArticle } from '../libs/csv/dataMapper.js'
 import { validateFile } from '../libs/csv/validateFile.js'
 import { cleanFile } from '../libs/csv/cleanFile.js'
 
-export const getAppraisalArticles = async (req, res) => {
-  try {
-    const allAppraisalArticles = await AppraisalArticle.find()
-      .populate('state', 'name')
-      .populate('ubication', 'name')
-      .populate('article', 'name')
-      .populate('subGroup', 'name')
-
-    res.status(200).json(allAppraisalArticles)
-  } catch (error) {
-    handleHttpError({
-      res,
-      error: error.message
-    })
-  }
-}
-
 export const createAppraisalArticle = async (req, res) => {
   try {
     const input = req.body
@@ -135,6 +118,7 @@ export const getFilterAppraisalArticles = async (req, res) => {
       .populate('ubication', 'name')
       .populate('article', 'name')
       .populate('subGroup', 'name')
+      .sort({ appraisalCodeNumber: 'asc' })
     res.status(200).json(results)
   } catch (error) {
     handleHttpError({ res, error: error.message })

@@ -10,7 +10,7 @@ import { validateFile } from '../libs/csv/validateFile.js'
 
 export const getUbications = async (req, res) => {
   try {
-    const allUbications = await Ubication.find()
+    const allUbications = await Ubication.find().sort({ name: 'asc' })
     res.status(200).json(allUbications)
   } catch (error) {
     handleHttpError({ res, error: error.message })

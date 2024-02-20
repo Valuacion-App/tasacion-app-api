@@ -123,6 +123,10 @@ const appaisalArticleSchema = new Schema(
     isPC: {
       type: Boolean,
       default: false
+    },
+    useFormule: {
+      type: Boolean,
+      default: false
     }
   },
   {

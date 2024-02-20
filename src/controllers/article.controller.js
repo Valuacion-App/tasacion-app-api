@@ -10,7 +10,7 @@ import { dataMapperArticle } from '../libs/csv/dataMapper.js'
 
 export const getArticles = async (req, res) => {
   try {
-    const allArticles = await Article.find()
+    const allArticles = await Article.find().sort({ name: 'asc' })
     res.status(200).json(allArticles)
   } catch (error) {
     handleHttpError({ res, error: error.message })

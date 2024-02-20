@@ -41,6 +41,6 @@ export const logOut = (req, res) => {
 }
 
 export const getAllUsers = async (req, res) => {
-  const Users = await User.find()
+  const Users = await User.find().sort({ fullname: 'asc' })
   res.status(200).json(Users)
 }

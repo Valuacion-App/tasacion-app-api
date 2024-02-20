@@ -10,7 +10,7 @@ import { dataMapperState } from '../libs/csv/dataMapper.js'
 
 export const getStates = async (req, res) => {
   try {
-    const allStates = await State.find()
+    const allStates = await State.find().sort({ k2: 'asc' })
     res.status(200).json(allStates)
   } catch (error) {
     handleHttpError({ res, error: error.message })
