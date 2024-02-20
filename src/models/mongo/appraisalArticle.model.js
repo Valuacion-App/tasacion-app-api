@@ -10,8 +10,7 @@ const appaisalArticleSchema = new Schema(
     appraisalCode: {
       type: String,
       required: true,
-      trim: true,
-      unique: true
+      trim: true
     },
     code: {
       type: String,
@@ -42,6 +41,9 @@ const appaisalArticleSchema = new Schema(
       validate: {
         validator: async function (value) {
           const articleFound = await Article.findById(value)
+          if (Boolean(articleFound) === false) {
+            console.log(value)
+          }
           return Boolean(articleFound)
         },
         message: 'La propiedad articulo debe ser un ID válido'
@@ -83,6 +85,9 @@ const appaisalArticleSchema = new Schema(
       ref: 'State',
       validate: {
         validator: async function (value) {
+          if (!value) {
+            return true
+          }
           const stateFound = await State.findById(value)
           return Boolean(stateFound)
         },
@@ -96,6 +101,28 @@ const appaisalArticleSchema = new Schema(
     urlImage2: {
       type: String,
       trim: true
+    },
+    isChecked: {
+      type: Boolean,
+      default: false
+    },
+    appraisalCodeNumber: {
+      type: Number
+    },
+    K1a: {
+      type: Number
+    },
+    Va: {
+      type: Number,
+      default: 0
+    },
+    replacementValue: {
+      type: Number,
+      default: 0
+    },
+    isPC: {
+      type: Boolean,
+      default: false
     }
   },
   {

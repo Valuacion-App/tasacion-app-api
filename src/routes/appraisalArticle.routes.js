@@ -5,22 +5,36 @@ import {
   getAppraisalArticle,
   updateAppraisalArticle,
   deleteAppraisalArticle,
-  getFilterAppraisalArticles
+  getFilterAppraisalArticles,
+  uploadDataCsv,
+  deleteAllDataFromUbication
 } from '../controllers/appraisalArticle.controller.js'
 import { validateSchema } from '../middlewares/validator.middleware.js'
 import { registerAppraisalArticle } from '../schemas/appraisalArticle.schema.js'
+import { upload } from '../middlewares/multer.js'
 
 const router = Router()
 
 router.get('/', getAppraisalArticles)
 router.get('/search', getFilterAppraisalArticles)
+router.get('/:id', getAppraisalArticle)
+
 router.post(
   '/',
   validateSchema(registerAppraisalArticle),
   createAppraisalArticle
 )
-router.get('/:id', getAppraisalArticle)
-router.put('/:id', validateSchema(registerAppraisalArticle.partial()), updateAppraisalArticle)
+router.post(
+  '/import-data/ubication/:id',
+  upload.single('csvFile'),
+  uploadDataCsv
+)
+router.put(
+  '/:id',
+  validateSchema(registerAppraisalArticle.partial()),
+  updateAppraisalArticle
+)
+router.delete('/delete-all/:id', deleteAllDataFromUbication)
 router.delete('/:id', deleteAppraisalArticle)
 
 export default router
