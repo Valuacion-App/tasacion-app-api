@@ -80,7 +80,9 @@ export const dataMapperAppraisalArticle = ({ lists, data, idUbication }) => {
     appraisalCodeNumber: getNumberByCode(appraisalCode),
     K1a: Number(data.K1a),
     Va: Number(data.Va),
-    isPc: data.Article === 'TAS - EQUIPO DE COMPUTACIÓN'
+    replacementValue: Number(data.ValorDeReposicion),
+    isPc: data.Article === 'TAS - EQUIPO DE COMPUTACIÓN',
+    useFormule: data.esSinFormula === 'NO'
   }
   return newAppraisalArticle
 }

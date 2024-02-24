@@ -5,7 +5,7 @@ import SubGroup from './subgroup.model.js'
 import Article from './article.model.js'
 const { Schema } = mongoose
 
-const appaisalArticleSchema = new Schema(
+const appraisalArticleSchema = new Schema(
   {
     appraisalCode: {
       type: String,
@@ -135,4 +135,4 @@ const appaisalArticleSchema = new Schema(
   }
 )
 
-export default mongoose.model('AppaisalArticle', appaisalArticleSchema)
+export default mongoose.model('AppraisalArticle', appraisalArticleSchema)
