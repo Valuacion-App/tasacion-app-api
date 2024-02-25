@@ -6,6 +6,7 @@ import {
   handleHttpErrorCustome
 } from '../libs/handleHttpMessage/handleHttpError.js'
 import Article from '../models/mongo/article.model.js'
+import AppraisalArticleModel from '../models/mongo/appraisalArticle.model.js'
 import { dataMapperArticle } from '../libs/csv/dataMapper.js'
 
 export const getArticles = async (req, res) => {
@@ -84,7 +85,7 @@ export const updateArticle = async (req, res) => {
 export const deleteArticle = async (req, res) => {
   try {
     const idArticle = req.params.id
-    const article = await Article.findByIdAndDelete(idArticle)
+    const article = await Article.findById(idArticle)
 
     if (!article) {
       return handleHttpErrorCustome({
@@ -93,8 +94,16 @@ export const deleteArticle = async (req, res) => {
         message: 'Artículo no encontrado'
       })
     }
+
+    const result = await AppraisalArticleModel.updateMany(
+      { article: article._id },
+      { $set: { article: null } }
+    )
+    await article.deleteOne()
+
     res.status(200).json({
-      message: 'Artículo eliminado correctamente'
+      message: 'Artículo eliminado correctamente',
+      modifiedCount: result.modifiedCount
     })
   } catch (error) {
     handleHttpError({ res, error: error.message })

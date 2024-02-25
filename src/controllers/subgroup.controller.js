@@ -7,6 +7,7 @@ import {
 } from '../libs/handleHttpMessage/handleHttpError.js'
 import SubGroup from '../models/mongo/subgroup.model.js'
 import { dataMapperSubGroup } from '../libs/csv/dataMapper.js'
+import AppraisalArticleModel from '../models/mongo/appraisalArticle.model.js'
 
 export const getSubGroups = async (req, res) => {
   try {
@@ -84,7 +85,7 @@ export const updateSubGroup = async (req, res) => {
 export const deleteSubGroup = async (req, res) => {
   try {
     const idSubGroup = req.params.id
-    const subGroup = await SubGroup.findByIdAndDelete(idSubGroup)
+    const subGroup = await SubGroup.findById(idSubGroup)
 
     if (!subGroup) {
       return handleHttpErrorCustome({
@@ -94,8 +95,15 @@ export const deleteSubGroup = async (req, res) => {
       })
     }
 
+    const result = await AppraisalArticleModel.updateMany(
+      { subGroup: subGroup._id },
+      { $set: { subGroup: null } }
+    )
+    await subGroup.deleteOne()
+
     res.status(200).json({
-      message: 'Sub-grupo eliminado correctamente'
+      message: 'Sub-grupo eliminado correctamente',
+      modifiedCount: result.modifiedCount
     })
   } catch (error) {
     handleHttpError({ res, error: error.message })

@@ -29,36 +29,39 @@ const appraisalArticleSchema = new Schema(
       ref: 'Ubication',
       validate: {
         validator: async function (value) {
+          if (value === null) return true
           const ubicationFound = await Ubication.findById(value)
           return Boolean(ubicationFound)
         },
-        message: 'La propiedad ubicacion debe ser un ID válido'
-      }
+        message: 'La propiedad ubicación debe ser un ID válido'
+      },
+      default: null
     },
     article: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Article',
       validate: {
         validator: async function (value) {
+          if (value === null) return true
           const articleFound = await Article.findById(value)
-          if (Boolean(articleFound) === false) {
-            console.log(value)
-          }
           return Boolean(articleFound)
         },
-        message: 'La propiedad articulo debe ser un ID válido'
-      }
+        message: 'La propiedad artículo debe ser un ID válido'
+      },
+      default: null
     },
     subGroup: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'SubGroup',
       validate: {
         validator: async function (value) {
+          if (value === null) return true
           const subGroupFound = await SubGroup.findById(value)
           return Boolean(subGroupFound)
         },
         message: 'La propiedad sub-grupo debe ser un ID válido'
-      }
+      },
+      default: null
     },
     detail: {
       type: String,
@@ -85,14 +88,13 @@ const appraisalArticleSchema = new Schema(
       ref: 'State',
       validate: {
         validator: async function (value) {
-          if (!value) {
-            return true
-          }
+          if (value === null) return true
           const stateFound = await State.findById(value)
           return Boolean(stateFound)
         },
-        message: 'La propiedad estado debe ser un ID válido'
-      }
+        message: 'La propiedad de estado debe ser un ID válido'
+      },
+      default: null
     },
     urlImage1: {
       type: String,
