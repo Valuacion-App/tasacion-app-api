@@ -3,12 +3,12 @@ import mongoose from 'mongoose'
 
 export const registerAppraisalArticle = z.object({
   appraisalCode: z.string({
-    required_error: 'El campo codigo de tasacion es requerido',
-    invalid_type_error: 'El codigo de tasacion es debe ser una cadena de texto'
+    required_error: 'El campo código de tasación es requerido',
+    invalid_type_error: 'El código de tasación es debe ser una cadena de texto'
   }),
   code: z
     .string({
-      invalid_type_error: 'El codigo debe ser una cadena de texto'
+      invalid_type_error: 'El código debe ser una cadena de texto'
     })
     .optional(),
   bullet: z
@@ -24,7 +24,7 @@ export const registerAppraisalArticle = z.object({
   ubication: z
     .string({
       invalid_type_error:
-        'La referencia de una ubicacion/ambiente debe ser una cadena de texto'
+        'La referencia de una ubicación/ambiente debe ser una cadena de texto'
     })
     .refine(
       (val) => {
@@ -70,7 +70,7 @@ export const registerAppraisalArticle = z.object({
     .optional(),
   description: z
     .string({
-      invalid_type_error: 'La descripcion debe ser una cadena de texto'
+      invalid_type_error: 'La descripción debe ser una cadena de texto'
     })
     .optional(),
   vre: z
@@ -110,19 +110,49 @@ export const registerAppraisalArticle = z.object({
   urlImage1: z
     .string({
       invalid_type_error:
-        'El campo url de la imagen 1 debe ser una cadena de texto'
+        'El campo URL de la imagen 1 debe ser una cadena de texto'
     })
     .url({
-      message: 'El campo url de la imagen 1 no correponde a un formato URL'
+      message: 'El campo URL de la imagen 1 no corresponde a un formato URL'
     })
     .optional(),
   urlImage2: z
     .string({
       invalid_type_error:
-        'El campo url de la imagen 2 debe ser una cadena de texto'
+        'El campo URL de la imagen 2 debe ser una cadena de texto'
     })
     .url({
-      message: 'El campo url de la imagen 2 no correponde a un formato URL'
+      message: 'El campo URL de la imagen 2 no corresponde a un formato URL'
+    })
+    .optional(),
+  isChecked: z
+    .boolean({
+      invalid_type_error: 'El campo de revisado debe ser un valor booleano'
+    })
+    .optional(),
+  K1a: z
+    .number({
+      invalid_type_error: 'El valor de K1a debe ser un numero'
+    })
+    .optional(),
+  Va: z
+    .number({
+      invalid_type_error: 'El valor de Va debe ser un numero'
+    })
+    .optional(),
+  replacementValue: z
+    .number({
+      invalid_type_error: 'El valor de valor de reposición debe ser un numero'
+    })
+    .optional(),
+  isPC: z
+    .boolean({
+      invalid_type_error: 'El valor de isPC debe ser un valor booleano'
+    })
+    .optional(),
+  useFormule: z
+    .boolean({
+      invalid_type_error: 'El valor de isFormule debe ser un valor booleano'
     })
     .optional()
 })

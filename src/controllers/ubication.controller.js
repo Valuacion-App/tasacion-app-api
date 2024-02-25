@@ -1,5 +1,6 @@
 import csv from 'csv-parser'
 import Ubication from '../models/mongo/ubication.model.js'
+import AppraisalArticle from '../models/mongo/appraisalArticle.model.js'
 import {
   handleHttpError,
   handleHttpErrorCustome
@@ -86,7 +87,7 @@ export const updateUbication = async (req, res) => {
 export const deleteUbication = async (req, res) => {
   try {
     const idUbication = req.params.id
-    const ubication = await Ubication.findByIdAndDelete(idUbication)
+    const ubication = await Ubication.findById(idUbication)
 
     if (!ubication) {
       return handleHttpErrorCustome({
@@ -95,8 +96,16 @@ export const deleteUbication = async (req, res) => {
         message: 'Ubicación no encontado'
       })
     }
-    res.status(200).json({
-      message: 'Ubicación eliminado correctamente'
+
+    const result = await AppraisalArticle.updateMany(
+      { ubication: ubication._id },
+      { $set: { ubication: null } }
+    )
+    await ubication.deleteOne()
+
+    await res.status(200).json({
+      message: 'Ubicación eliminado correctamente',
+      modifiedCount: result.modifiedCount
     })
   } catch (error) {
     handleHttpError({ res, error: error.message })

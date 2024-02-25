@@ -1,5 +1,6 @@
 import csv from 'csv-parser'
 import State from '../models/mongo/state.model.js'
+import AppraisalArticleModel from '../models/mongo/appraisalArticle.model.js'
 import {
   handleHttpError,
   handleHttpErrorCustome
@@ -81,7 +82,7 @@ export const updateState = async (req, res) => {
 export const deleteState = async (req, res) => {
   try {
     const idState = req.params.id
-    const state = await State.findByIdAndDelete(idState)
+    const state = await State.findById(idState)
 
     if (!state) {
       return handleHttpErrorCustome({
@@ -90,7 +91,17 @@ export const deleteState = async (req, res) => {
         message: 'Estado no encontrado'
       })
     }
-    return res.status(200).json({ message: 'Estado eliminado correctamente' })
+
+    const result = await AppraisalArticleModel.updateMany(
+      { state: state._id },
+      { $set: { state: null } }
+    )
+    await state.deleteOne()
+
+    return res.status(200).json({
+      message: 'Estado eliminado correctamente',
+      modifiedCount: result.modifiedCount
+    })
   } catch (error) {
     handleHttpError({ res, error: error.message })
   }

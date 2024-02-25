@@ -19,7 +19,7 @@ export const registerUserSchema = z.object({
     required_error: 'La contraseña es requerida',
     invalid_type_error: 'La contraseña debe ser una cadena de texto'
   }).min(6, {
-    message: 'La contraseña debe tener minimo 6 caracteres'
+    message: 'La contraseña debe tener mínimo 6 caracteres'
   }),
   roles: z.array(
     z.enum(['admin', 'user'])
@@ -37,6 +37,6 @@ export const loginSchema = z.object({
     required_error: 'La contraseña es requerida',
     invalid_type_error: 'La contraseña debe ser una cadena de texto'
   }).min(6, {
-    message: 'La contraseña debe tener minimo 6 caracteres'
+    message: 'La contraseña debe tener mínimo 6 caracteres'
   })
 })
