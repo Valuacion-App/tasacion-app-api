@@ -114,7 +114,7 @@ export const getFilterAppraisalArticles = async (req, res) => {
     if (stateId) filters.state = new mongoose.Types.ObjectId(stateId)
 
     const results = await AppraisalArticle.find(filters)
-      .populate('state', 'name')
+      .populate('state')
       .populate('ubication', 'name')
       .populate('article', 'name')
       .populate('subGroup', 'name')
