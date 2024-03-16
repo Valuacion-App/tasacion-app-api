@@ -202,3 +202,116 @@ export const deleteAllDataFromUbication = async (req, res) => {
     handleHttpError({ res, error: error.message })
   }
 }
+
+export const filterOrderUbicationSubGroup = async (req, res) => {
+  try {
+    const { ubicationId, subgroupId, important } = req.query
+
+    const pipeline = []
+
+    // Filtrar por ID de ubicación si está presente
+    if (subgroupId) {
+      pipeline.push({
+        $match: { subGroup: new mongoose.Types.ObjectId(subgroupId) }
+      })
+    }
+
+    if (ubicationId) {
+      pipeline.push({
+        $match: { ubication: new mongoose.Types.ObjectId(ubicationId) }
+      })
+    }
+
+    pipeline.push({
+      $lookup: {
+        from: 'ubications',
+        localField: 'ubication',
+        foreignField: '_id',
+        as: 'ubication'
+      }
+    })
+
+    pipeline.push({ $unwind: '$ubication' })
+
+    pipeline.push({
+      $lookup: {
+        from: 'subgroups',
+        localField: 'subGroup',
+        foreignField: '_id',
+        as: 'subGroup'
+      }
+    })
+
+    pipeline.push({ $unwind: '$subGroup' })
+
+    pipeline.push({
+      $lookup: {
+        from: 'articles',
+        localField: 'article',
+        foreignField: '_id',
+        as: 'article'
+      }
+    })
+
+    pipeline.push({ $unwind: '$article' })
+
+    pipeline.push({
+      $lookup: {
+        from: 'states',
+        localField: 'state',
+        foreignField: '_id',
+        as: 'state'
+      }
+    })
+
+    pipeline.push({ $unwind: '$state' })
+
+    // Si necesitas filtrar también por articleId, puedes agregar la lógica aquí
+    if (important === 'true') {
+      pipeline.push({
+        $match: {
+          $and: [
+            { 'state.name': { $ne: 'Malo' } },
+            { 'state.name': { $ne: 'Descarte' } }
+          ]
+        }
+      })
+    }
+    pipeline.push({ $sort: { 'ubication.name': 1, appraisalCodeNumber: 1 } })
+
+    pipeline.push({
+      $project: {
+        ubication: { _id: '$ubication._id', name: '$ubication.name' },
+        article: { _id: '$article._id', name: '$article.name' },
+        details: 1,
+        appraisalCode: 1, // Agrega los campos adicionales que necesites
+        code: 1,
+        bullet: 1,
+        date: 1,
+        subGroup: { _id: '$subGroup._id', name: '$subGroup.name' },
+        detail: 1,
+        description: 1,
+        vre: 1,
+        vr: 1,
+        ant: 1,
+        vexp: 1,
+        state: { _id: '$state._id', name: '$state.name', k2: '$state.k2' },
+        urlImage1: 1,
+        urlImage2: 1,
+        isChecked: 1,
+        appraisalCodeNumber: 1,
+        K1a: 1,
+        Va: 1,
+        replacementValue: 1,
+        isPC: 1,
+        useFormule: 1,
+        createdAt: 1,
+        updatedAt: 1
+      }
+    })
+    const results = await AppraisalArticle.aggregate(pipeline)
+    res.status(200).json(results)
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
