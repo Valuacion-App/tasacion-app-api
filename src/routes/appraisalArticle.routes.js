@@ -6,7 +6,8 @@ import {
   deleteAppraisalArticle,
   getFilterAppraisalArticles,
   uploadDataCsv,
-  deleteAllDataFromUbication
+  deleteAllDataFromUbication,
+  filterOrderUbicationSubGroup
 } from '../controllers/appraisalArticle.controller.js'
 import { validateSchema } from '../middlewares/validator.middleware.js'
 import { registerAppraisalArticle } from '../schemas/appraisalArticle.schema.js'
@@ -15,6 +16,7 @@ import { upload } from '../middlewares/multer.js'
 const router = Router()
 
 router.get('/search', getFilterAppraisalArticles)
+router.get('/filter', filterOrderUbicationSubGroup)
 router.get('/:id', getAppraisalArticle)
 
 router.post(
