@@ -271,7 +271,7 @@ export const filterOrderUbicationSubGroup = async (req, res) => {
       pipeline.push({
         $match: {
           $and: [
-            { 'state.name': { $ne: 'Malo' } },
+            { 'state.name': { $ne: 'Basura' } },
             { 'state.name': { $ne: 'Descarte' } }
           ]
         }
