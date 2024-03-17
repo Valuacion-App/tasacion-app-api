@@ -205,7 +205,7 @@ export const deleteAllDataFromUbication = async (req, res) => {
 
 export const filterOrderUbicationSubGroup = async (req, res) => {
   try {
-    const { ubicationId, subgroupId, important } = req.query
+    const { ubicationId, articleId, subgroupId, important } = req.query
 
     const pipeline = []
 
@@ -219,6 +219,12 @@ export const filterOrderUbicationSubGroup = async (req, res) => {
     if (ubicationId) {
       pipeline.push({
         $match: { ubication: new mongoose.Types.ObjectId(ubicationId) }
+      })
+    }
+
+    if (articleId) {
+      pipeline.push({
+        $match: { article: new mongoose.Types.ObjectId(articleId) }
       })
     }
 
@@ -276,7 +282,14 @@ export const filterOrderUbicationSubGroup = async (req, res) => {
           ]
         }
       })
+    } else {
+      pipeline.push({
+        $match: {
+          'state.name': { $in: ['Basura', 'Descarte'] }
+        }
+      })
     }
+
     pipeline.push({ $sort: { 'ubication.name': 1, appraisalCodeNumber: 1 } })
 
     pipeline.push({
