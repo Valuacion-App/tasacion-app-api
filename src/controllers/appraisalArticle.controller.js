@@ -9,7 +9,7 @@ import Ubication from '../models/mongo/ubication.model.js'
 import Article from '../models/mongo/article.model.js'
 import State from '../models/mongo/state.model.js'
 import SubGroup from '../models/mongo/subgroup.model.js'
-import { dataMapperAppraisalArticle } from '../libs/csv/dataMapper.js'
+import { dataMapperAppraisalArticle, dataMapperAppraisalArticleSubGroup } from '../libs/csv/dataMapper.js'
 import { validateFile } from '../libs/csv/validateFile.js'
 import { cleanFile } from '../libs/csv/cleanFile.js'
 
@@ -162,6 +162,69 @@ export const uploadDataCsv = async (req, res) => {
             lists,
             data: row,
             idUbication: ubication._id
+          })
+
+          if (newAppraisalArticle) {
+            parsedData.push(newAppraisalArticle)
+            dataSuccess += 1
+          } else {
+            dataRejected += 1
+          }
+        })
+        .on('end', () => resolve())
+        .on('error', (error) => reject(error))
+
+      stream.write(csvData)
+      stream.end()
+    })
+    await AppraisalArticle.insertMany(parsedData)
+    res.status(200).json({
+      success: dataSuccess > 0,
+      dataSuccess,
+      dataRejected
+    })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
+export const uploadDataCsvSubGroup = async (req, res) => {
+  try {
+    const { id } = req.params
+    const subgroup = await SubGroup.findById(id)
+
+    if (!subgroup) {
+      return handleHttpErrorCustome({
+        res,
+        code: 404,
+        message: 'El Sub Grupo que proporciono no esta en la base de datos'
+      })
+    }
+
+    const csvValidationResult = validateFile(req, 'csv')
+    if (csvValidationResult) {
+      return res
+        .status(csvValidationResult.status)
+        .json({ error: csvValidationResult.message })
+    }
+
+    const csvData = cleanFile(req.file.buffer.toString('utf-8'))
+    const parsedData = []
+    let dataSuccess = 0
+    let dataRejected = 0
+
+    const lists = {}
+    lists.articles = await Article.find()
+    lists.ubications = await Ubication.find()
+    lists.states = await State.find()
+
+    await new Promise((resolve, reject) => {
+      const stream = csv({ separator: ',' })
+        .on('data', (row) => {
+          const newAppraisalArticle = dataMapperAppraisalArticleSubGroup({
+            lists,
+            data: row,
+            idSubGroup: subgroup._id
           })
 
           if (newAppraisalArticle) {
