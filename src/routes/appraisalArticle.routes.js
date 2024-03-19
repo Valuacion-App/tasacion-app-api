@@ -6,6 +6,7 @@ import {
   deleteAppraisalArticle,
   getFilterAppraisalArticles,
   uploadDataCsv,
+  uploadDataCsvSubGroup,
   deleteAllDataFromUbication,
   filterOrderUbicationSubGroup
 } from '../controllers/appraisalArticle.controller.js'
@@ -28,6 +29,11 @@ router.post(
   '/import-data/ubication/:id',
   upload.single('csvFile'),
   uploadDataCsv
+)
+router.post(
+  '/import-data/subgroup/:id',
+  upload.single('csvFile'),
+  uploadDataCsvSubGroup
 )
 router.put(
   '/:id',
