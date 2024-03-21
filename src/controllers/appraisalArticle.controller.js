@@ -266,9 +266,24 @@ export const deleteAllDataFromUbication = async (req, res) => {
   }
 }
 
+export const deleteAllDataFromSubGroup = async (req, res) => {
+  try {
+    const idSubgroup = req.params.id
+    const result = await AppraisalArticle.deleteMany({
+      subgroup: idSubgroup
+    })
+    res.status(200).json({
+      message: `Todos los items se eliminaron correctamente del subgroup: ${idSubgroup}`,
+      count: result.deletedCount
+    })
+  } catch (error) {
+    handleHttpError({ res, error: error.message })
+  }
+}
+
 export const filterOrderUbicationSubGroup = async (req, res) => {
   try {
-    const { ubicationId, articleId, subgroupId, important } = req.query
+    const { ubicationId, articleId, subgroupId, isDescarte, isBasura } = req.query
 
     const pipeline = []
 
@@ -336,19 +351,31 @@ export const filterOrderUbicationSubGroup = async (req, res) => {
     pipeline.push({ $unwind: '$state' })
 
     // Si necesitas filtrar también por articleId, puedes agregar la lógica aquí
-    if (important === 'true') {
+    if (isDescarte === 'true' && isBasura === 'true') {
+      pipeline.push({
+        $match: {
+          'state.name': { $in: ['Basura', 'Descarte'] }
+        }
+      })
+    } else if (isDescarte === 'true') {
+      pipeline.push({
+        $match: {
+          'state.name': { $in: ['Descarte'] }
+        }
+      })
+    } else if (isBasura === 'true') {
+      pipeline.push({
+        $match: {
+          'state.name': { $in: ['Basura'] }
+        }
+      })
+    } else {
       pipeline.push({
         $match: {
           $and: [
             { 'state.name': { $ne: 'Basura' } },
             { 'state.name': { $ne: 'Descarte' } }
           ]
-        }
-      })
-    } else {
-      pipeline.push({
-        $match: {
-          'state.name': { $in: ['Basura', 'Descarte'] }
         }
       })
     }
